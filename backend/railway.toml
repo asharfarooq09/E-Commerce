@@ -1,0 +1,13 @@
+# Backend API service (set Root Directory to /backend in Railway)
+[build]
+buildCommand = "npm install && npm run build"
+
+[deploy]
+startCommand = "npm run start"
+healthcheckPath = "/health"
+healthcheckTimeout = 120
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+# Run once per deploy before the new version goes live (schema sync; no migration history in repo yet)
+preDeployCommand = "npx prisma db push"
