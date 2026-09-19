@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { Router } from "express";
 import { z } from "zod";
-import { Role } from "../../generated/prisma/client";
+import { Role } from "../generated/prisma/client";
 import { prisma } from "../lib/prisma";
 import type { AuthenticatedRequest } from "../middleware/auth";
 import { requireAuth } from "../middleware/auth";

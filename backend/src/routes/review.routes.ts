@@ -5,6 +5,7 @@ import type { AuthenticatedRequest } from "../middleware/auth";
 import { requireAuth } from "../middleware/auth";
 import { AppError } from "../middleware/error-handler";
 import { refreshProductRating } from "../utils/product-rating";
+import { pathParam } from "../utils/params";
 
 const router = Router();
 
@@ -18,7 +19,7 @@ const reviewSchema = z.object({
 router.get("/product/:productId", async (req, res, next) => {
   try {
     const reviews = await prisma.review.findMany({
-      where: { productId: req.params.productId },
+      where: { productId: pathParam(req.params.productId, "productId") },
       orderBy: { createdAt: "desc" },
       include: { user: { select: { id: true, name: true } } },
     });

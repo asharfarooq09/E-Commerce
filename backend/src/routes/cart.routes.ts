@@ -4,6 +4,7 @@ import { prisma } from "../lib/prisma";
 import type { AuthenticatedRequest } from "../middleware/auth";
 import { requireAuth } from "../middleware/auth";
 import { AppError } from "../middleware/error-handler";
+import { pathParam } from "../utils/params";
 
 const router = Router();
 
@@ -106,7 +107,8 @@ router.patch("/items/:itemId", requireAuth, async (req: AuthenticatedRequest, re
   try {
     const quantity = z.coerce.number().int().min(1).max(99).parse(req.body.quantity);
     const cart = await getOrCreateCart(req.user!.id);
-    const item = cart.items.find((i) => i.id === req.params.itemId);
+    const itemId = pathParam(req.params.itemId, "itemId");
+    const item = cart.items.find((i) => i.id === itemId);
     if (!item) {
       throw new AppError("Cart item not found", 404);
     }
@@ -129,7 +131,7 @@ router.patch("/items/:itemId", requireAuth, async (req: AuthenticatedRequest, re
 router.delete("/items/:itemId", requireAuth, async (req: AuthenticatedRequest, res, next) => {
   try {
     const cart = await getOrCreateCart(req.user!.id);
-    const item = cart.items.find((i) => i.id === req.params.itemId);
+    const item = cart.items.find((i) => i.id === pathParam(req.params.itemId, "itemId"));
     if (!item) {
       throw new AppError("Cart item not found", 404);
     }

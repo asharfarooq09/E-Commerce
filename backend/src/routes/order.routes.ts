@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { z } from "zod";
-import { OrderStatus } from "../../generated/prisma/client";
+import { OrderStatus } from "../generated/prisma/client";
 import { prisma } from "../lib/prisma";
 import type { AuthenticatedRequest } from "../middleware/auth";
 import { requireAuth } from "../middleware/auth";
 import { AppError } from "../middleware/error-handler";
+import { pathParam } from "../utils/params";
 
 const router = Router();
 
@@ -48,7 +49,7 @@ router.get("/", requireAuth, async (req: AuthenticatedRequest, res, next) => {
 router.get("/:id", requireAuth, async (req: AuthenticatedRequest, res, next) => {
   try {
     const order = await prisma.order.findFirst({
-      where: { id: req.params.id, userId: req.user!.id },
+      where: { id: pathParam(req.params.id, "id"), userId: req.user!.id },
       include: { items: true },
     });
     if (!order) {

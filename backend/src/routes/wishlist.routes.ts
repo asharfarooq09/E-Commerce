@@ -4,6 +4,7 @@ import { prisma } from "../lib/prisma";
 import type { AuthenticatedRequest } from "../middleware/auth";
 import { requireAuth } from "../middleware/auth";
 import { AppError } from "../middleware/error-handler";
+import { pathParam } from "../utils/params";
 
 const router = Router();
 
@@ -53,7 +54,10 @@ router.post("/", requireAuth, async (req: AuthenticatedRequest, res, next) => {
 router.delete("/:productId", requireAuth, async (req: AuthenticatedRequest, res, next) => {
   try {
     await prisma.wishlistItem.deleteMany({
-      where: { userId: req.user!.id, productId: req.params.productId },
+      where: {
+        userId: req.user!.id,
+        productId: pathParam(req.params.productId, "productId"),
+      },
     });
     res.json({ message: "Removed from wishlist" });
   } catch (error) {

@@ -1,6 +1,6 @@
 import "dotenv/config";
 import bcrypt from "bcryptjs";
-import { Role } from "../generated/prisma/client";
+import { Role } from "../src/generated/prisma/client";
 import { seedCategories, seedProducts } from "./seed-data";
 import { prisma } from "../src/lib/prisma";
 import { slugify } from "../src/utils/slug";

@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { z } from "zod";
-import { OrderStatus, Role } from "../../generated/prisma/client";
+import { OrderStatus, Prisma, Role } from "../generated/prisma/client";
 import { prisma } from "../lib/prisma";
 import type { AuthenticatedRequest } from "../middleware/auth";
 import { requireAdmin, requireAuth } from "../middleware/auth";
 import { AppError } from "../middleware/error-handler";
+import { pathParam } from "../utils/params";
 import { slugify } from "../utils/slug";
 
 const router = Router();
@@ -90,7 +91,7 @@ router.post("/products", async (req, res, next) => {
         brand: body.brand,
         categoryId: body.categoryId,
         featured: body.featured ?? false,
-        attributes: body.attributes,
+        attributes: body.attributes as Prisma.InputJsonValue | undefined,
         images: body.imageUrl
           ? {
               create: {
@@ -118,7 +119,7 @@ router.patch("/products/:id", async (req, res, next) => {
   try {
     const body = productSchema.partial().parse(req.body);
     const product = await prisma.product.update({
-      where: { id: req.params.id },
+      where: { id: pathParam(req.params.id, "id") },
       data: {
         name: body.name,
         description: body.description,
@@ -126,7 +127,7 @@ router.patch("/products/:id", async (req, res, next) => {
         brand: body.brand,
         categoryId: body.categoryId,
         featured: body.featured,
-        attributes: body.attributes,
+        attributes: body.attributes as Prisma.InputJsonValue | undefined,
       },
       include: { category: true, inventory: true, images: true },
     });
@@ -147,7 +148,7 @@ router.patch("/products/:id", async (req, res, next) => {
 
 router.delete("/products/:id", async (req, res, next) => {
   try {
-    await prisma.product.delete({ where: { id: req.params.id } });
+    await prisma.product.delete({ where: { id: pathParam(req.params.id, "id") } });
     res.json({ message: "Product deleted" });
   } catch (error) {
     next(error);
@@ -209,7 +210,7 @@ router.patch("/orders/:id/status", async (req, res, next) => {
   try {
     const status = z.nativeEnum(OrderStatus).parse(req.body.status);
     const order = await prisma.order.update({
-      where: { id: req.params.id },
+      where: { id: pathParam(req.params.id, "id") },
       data: { status },
       include: { items: true, user: { select: { id: true, name: true, email: true } } },
     });
@@ -254,7 +255,7 @@ router.patch("/inventory/:productId", async (req, res, next) => {
   try {
     const quantity = z.coerce.number().int().min(0).parse(req.body.quantity);
     const product = await prisma.product.findUnique({
-      where: { id: req.params.productId },
+      where: { id: pathParam(req.params.productId, "productId") },
     });
     if (!product) {
       throw new AppError("Product not found", 404);

@@ -1,9 +1,10 @@
-import { Prisma } from "../../generated/prisma/client";
+import { Prisma } from "../generated/prisma/client";
 import { Router } from "express";
 import { z } from "zod";
 import { productListInclude } from "../lib/product-select";
 import { prisma } from "../lib/prisma";
 import { AppError } from "../middleware/error-handler";
+import { pathParam } from "../utils/params";
 
 const router = Router();
 
@@ -134,7 +135,7 @@ router.get("/brands", async (_req, res, next) => {
 router.get("/:slug", async (req, res, next) => {
   try {
     const product = await prisma.product.findUnique({
-      where: { slug: req.params.slug },
+      where: { slug: pathParam(req.params.slug, "slug") },
       include: {
         ...productListInclude,
         reviews: {
