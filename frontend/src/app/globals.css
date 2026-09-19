@@ -1,0 +1,193 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+  --secondary: #eef2ff;
+  --secondary-foreground: #312e81;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --border: #e2e8f0;
+  --ring: #6366f1;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --toast-success-from: #059669;
+  --toast-success-to: #047857;
+  --toast-primary-from: #4f46e5;
+  --toast-primary-to: #4338ca;
+  --toast-primary-strong-from: #4338ca;
+  --toast-primary-strong-to: #3730a3;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --font-sans: var(--font-geist-sans);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+[data-sonner-toaster] {
+  --width: min(380px, calc(100vw - 32px));
+  font-family: var(--font-sans), system-ui, sans-serif;
+  z-index: 9999;
+  /* Prevent stacked toasts from scaling down / shifting on hover */
+  --scale: 1 !important;
+}
+
+[data-sonner-toaster][data-expanded="true"] [data-sonner-toast] {
+  height: auto !important;
+  --initial-height: auto !important;
+}
+
+[data-sonner-toaster][data-y-position="bottom"] {
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+}
+
+[data-sonner-toaster][data-x-position="right"] {
+  right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+[data-sonner-toast][data-styled="true"] {
+  padding: 12px 16px !important;
+  min-height: 4.75rem !important;
+  height: auto !important;
+}
+
+[data-sonner-toast] [data-description] {
+  line-height: 1.25rem;
+}
+
+/* Filled toasts — ShopAI palette only: success green + theme indigo */
+[data-sonner-toast][data-type="success"] {
+  background: linear-gradient(
+    135deg,
+    var(--toast-success-from) 0%,
+    var(--toast-success-to) 100%
+  ) !important;
+  box-shadow: 0 12px 28px -8px rgb(5 150 105 / 40%) !important;
+  color: #fff !important;
+}
+
+[data-sonner-toast][data-type="error"] {
+  background: linear-gradient(
+    135deg,
+    var(--toast-primary-strong-from) 0%,
+    var(--toast-primary-strong-to) 100%
+  ) !important;
+  box-shadow: 0 12px 28px -8px rgb(67 56 202 / 45%) !important;
+  color: #fff !important;
+}
+
+[data-sonner-toast][data-type="info"],
+[data-sonner-toast][data-type="warning"] {
+  background: linear-gradient(
+    135deg,
+    var(--toast-primary-from) 0%,
+    var(--toast-primary-to) 100%
+  ) !important;
+  box-shadow: 0 12px 28px -8px rgb(79 70 229 / 40%) !important;
+  color: #fff !important;
+}
+
+[data-sonner-toast]:not([data-type="success"]):not([data-type="error"]):not([data-type="info"]):not(
+    [data-type="warning"]
+  ) {
+  background: linear-gradient(
+    135deg,
+    var(--toast-primary-from) 0%,
+    var(--toast-primary-to) 100%
+  ) !important;
+  box-shadow: 0 12px 28px -8px rgb(79 70 229 / 40%) !important;
+  color: #fff !important;
+}
+
+/* Close control — minimal, no heavy pill */
+[data-sonner-toast] .shopai-toast-close,
+[data-sonner-toast] [data-close-button] {
+  position: absolute !important;
+  left: auto !important;
+  right: 10px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 28px !important;
+  height: 28px !important;
+  border: none !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: rgb(255 255 255 / 0.75) !important;
+  opacity: 1 !important;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+[data-sonner-toast] .shopai-toast-close:hover,
+[data-sonner-toast] [data-close-button]:hover {
+  background: rgb(255 255 255 / 0.12) !important;
+  color: #fff !important;
+}
+
+[data-sonner-toast] [data-close-button] svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-sonner-toaster][data-y-position="bottom"] [data-sonner-toast][data-visible="true"] {
+    animation: shopai-toast-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  [data-sonner-toaster][data-y-position="bottom"] [data-sonner-toast][data-mounted="true"][data-removed="true"] {
+    animation: shopai-toast-exit 0.35s cubic-bezier(0.4, 0, 1, 1) both;
+  }
+}
+
+@keyframes shopai-toast-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shopai-toast-exit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
