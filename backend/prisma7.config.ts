@@ -3,13 +3,19 @@
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
+function envUrl(name: string): string | undefined {
+  const value = process.env[name];
+  if (typeof value !== "string" || value.trim() === "") return undefined;
+  return value;
+}
+
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
-    shadowDatabaseUrl: process.env["SHADOW_DATABASE_URL"],
+    url: envUrl("DATABASE_URL"),
+    shadowDatabaseUrl: envUrl("SHADOW_DATABASE_URL"),
   },
 });

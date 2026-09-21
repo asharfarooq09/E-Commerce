@@ -13,6 +13,7 @@
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "ai:embed-products": "tsx scripts/embed-products.ts",
+    "railway:predeploy": "node scripts/railway-predeploy.cjs",
     "catalog:images": "tsx scripts/generate-catalog-images.ts && tsx scripts/fix-product-images.ts"
   },
   "keywords": [],
