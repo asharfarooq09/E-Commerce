@@ -1,4 +1,6 @@
-const SERVER_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+const SERVER_API_URL = (
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"
+).trim();
 
 function getApiBaseUrl() {
   if (typeof window === "undefined") {

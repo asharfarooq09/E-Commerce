@@ -18,7 +18,11 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(4000),
   DATABASE_URL: z.string().min(1),
   JWT_SECRET: z.string().min(32),
-  CLIENT_URL: z.string().url(),
+  /** Browser origin for CORS + admin links (must include scheme, e.g. https://…) */
+  CLIENT_URL: z.preprocess(
+    (value) => (typeof value === "string" ? value.trim() : value),
+    z.string().url(),
+  ),
   /** Free key from https://aistudio.google.com/apikey */
   GEMINI_API_KEY: z.preprocess(
     (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
