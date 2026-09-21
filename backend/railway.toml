@@ -9,4 +9,8 @@ healthcheckTimeout = 120
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 
-preDeployCommand = "npm run railway:predeploy"
+# NOTE: Do NOT use `prisma db push` as preDeploy on Railway.
+# It fails when unmanaged runtime tables exist (AI embeddings) and blocks deploys.
+# Core schema is already applied from prior deploys; AI tables are created at
+# runtime via ensureSemanticTables(). For one-off schema sync use Railway Console:
+#   npx prisma db push
