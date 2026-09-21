@@ -8,25 +8,23 @@ const PRODUCTS_PER_CATEGORY = 8;
 
 router.get("/home", async (_req, res, next) => {
   try {
-    const [featured, categories] = await Promise.all([
-      prisma.product.findMany({
-        where: { featured: true },
-        include: productListInclude,
-        orderBy: productListOrder,
-        take: 8,
-      }),
-      prisma.category.findMany({
-        orderBy: { name: "asc" },
-        include: {
-          _count: { select: { products: true } },
-          products: {
-            include: productListInclude,
-            orderBy: productListOrder,
-            take: PRODUCTS_PER_CATEGORY,
-          },
+    const featured = await prisma.product.findMany({
+      where: { featured: true },
+      include: productListInclude,
+      orderBy: productListOrder,
+      take: 8,
+    });
+    const categories = await prisma.category.findMany({
+      orderBy: { name: "asc" },
+      include: {
+        _count: { select: { products: true } },
+        products: {
+          include: productListInclude,
+          orderBy: productListOrder,
+          take: PRODUCTS_PER_CATEGORY,
         },
-      }),
-    ]);
+      },
+    });
 
     res.json({
       featured,

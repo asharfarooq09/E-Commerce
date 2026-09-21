@@ -1,7 +1,76 @@
+/** Verified Unsplash photo URLs (checked live; avoid IDs that 404 over time). */
+function unsplash(photoId: string, width = 900): string {
+  return `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=${width}&q=80`;
+}
+
+const PRODUCT_PHOTOS: Record<string, string[]> = {
+  Laptops: [
+    unsplash("photo-1496181133206-80ce9b88a853"),
+    unsplash("photo-1517336714731-489689fd1ca8"),
+    unsplash("photo-1593642632823-8f785ba67e45"),
+    unsplash("photo-1484788984921-03950022c9ef"),
+    unsplash("photo-1525547719571-a2d4ac8945e2"),
+    unsplash("photo-1588872657578-7efd1f1555ed"),
+    unsplash("photo-1541807084-5c52b6b3adef"),
+    unsplash("photo-1498050108023-c5249f4df085"),
+  ],
+  Smartphones: [
+    unsplash("photo-1511707171634-5f897ff02aa9"),
+    unsplash("photo-1592899677977-9c10ca588bbd"),
+    unsplash("photo-1510557880182-3d4d3cba35a5"),
+    unsplash("photo-1580910051074-3eb694886505"),
+    unsplash("photo-1601784551446-20c9e07cdbdb"),
+    unsplash("photo-1598327105666-5b89351aff97"),
+    unsplash("photo-1565849904461-04a58ad377e0"),
+    unsplash("photo-1585060544812-6b45742d762f"),
+  ],
+  Audio: [
+    unsplash("photo-1505740420928-5e560c06d30e"),
+    unsplash("photo-1572569511254-d8f925fe2cbb"),
+    unsplash("photo-1484704849700-f032a568e944"),
+    unsplash("photo-1608043152269-423dbba4e7e1"),
+    unsplash("photo-1545454675-3531b543be5d"),
+    unsplash("photo-1546435770-a3e426bf472b"),
+    unsplash("photo-1487215078519-e21cc028cb29"),
+    unsplash("photo-1618366712010-f4ae9c647dcb"),
+  ],
+  Accessories: [
+    unsplash("photo-1587829741301-dc798b83add3"),
+    unsplash("photo-1527864550417-7fd91fc51a46"),
+    unsplash("photo-1625948515291-69613efd103f"),
+    unsplash("photo-1625723044792-44de16ccb4e9"),
+    unsplash("photo-1593640408182-31c70c8268f5"),
+    unsplash("photo-1609081219090-a6d81d3085bf"),
+    unsplash("photo-1545127398-14699f92334b"),
+    unsplash("photo-1527814050087-3793815479db"),
+  ],
+};
+
+const CATEGORY_PHOTOS: Record<string, string> = {
+  Laptops: unsplash("photo-1496181133206-80ce9b88a853", 800),
+  Smartphones: unsplash("photo-1511707171634-5f897ff02aa9", 800),
+  Audio: unsplash("photo-1505740420928-5e560c06d30e", 800),
+  Accessories: unsplash("photo-1491933382434-500287f9b54b", 800),
+};
+
+/** Hero storefront photo (laptop workspace). */
+export const HERO_IMAGE = unsplash("photo-1517336714731-489689fd1ca8", 1200);
+
+/** Category showcase image. */
+export function categoryCatalogImage(categoryName: string): string {
+  return CATEGORY_PHOTOS[categoryName] ?? PRODUCT_PHOTOS.Laptops[0];
+}
+
+/** Product card image — unique photo per category index. */
+export function productCatalogImage(categoryName: string, index: number): string {
+  const pool = PRODUCT_PHOTOS[categoryName] ?? PRODUCT_PHOTOS.Laptops;
+  return pool[index % pool.length];
+}
+
+
 export type SeedCategory = {
   name: string;
   description: string;
-  imageUrl: string;
 };
 
 export type SeedProduct = {
@@ -15,34 +84,28 @@ export type SeedProduct = {
   rating?: number;
   reviewCount?: number;
   attributes?: Record<string, unknown>;
-  imageUrl: string;
 };
 
 export const seedCategories: SeedCategory[] = [
   {
     name: "Laptops",
     description: "Performance laptops for work, study, and development.",
-    imageUrl: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&q=80",
   },
   {
     name: "Smartphones",
     description: "Flagship and mid-range phones with modern cameras.",
-    imageUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&q=80",
   },
   {
     name: "Audio",
     description: "Headphones, earbuds, speakers, and studio gear.",
-    imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80",
   },
   {
     name: "Accessories",
     description: "Keyboards, docks, stands, and everyday essentials.",
-    imageUrl: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&q=80",
   },
 ];
 
 export const seedProducts: SeedProduct[] = [
-  // Laptops
   {
     name: "NovaBook Pro 14",
     description:
@@ -55,7 +118,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.7,
     reviewCount: 128,
     attributes: { ram: 16, storage: 512, display: "14-inch", batteryHours: 12 },
-    imageUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=900&q=80",
   },
   {
     name: "AeroLite 15",
@@ -68,7 +130,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.5,
     reviewCount: 86,
     attributes: { ram: 16, storage: 256, display: "15.6-inch", batteryHours: 10 },
-    imageUrl: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=900&q=80",
   },
   {
     name: "DevStation X16",
@@ -81,7 +142,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.8,
     reviewCount: 54,
     attributes: { ram: 32, storage: 1024, display: "16-inch", batteryHours: 9 },
-    imageUrl: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=900&q=80",
   },
   {
     name: "NovaBook Air 13",
@@ -93,7 +153,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.4,
     reviewCount: 41,
     attributes: { ram: 16, storage: 512, display: "13-inch", batteryHours: 14 },
-    imageUrl: "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=900&q=80",
   },
   {
     name: "CarbonBook 17",
@@ -105,7 +164,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.6,
     reviewCount: 67,
     attributes: { ram: 32, storage: 1024, display: "17.3-inch", batteryHours: 8 },
-    imageUrl: "https://images.unsplash.com/photo-1603302576837-37561b0e4e1e?w=900&q=80",
   },
   {
     name: "CloudLite 14",
@@ -117,7 +175,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.2,
     reviewCount: 112,
     attributes: { ram: 8, storage: 256, display: "14-inch", batteryHours: 11 },
-    imageUrl: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=900&q=80",
   },
   {
     name: "StudioPad Pro",
@@ -130,7 +187,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.5,
     reviewCount: 39,
     attributes: { ram: 16, storage: 512, display: "13.5-inch touch", batteryHours: 10 },
-    imageUrl: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=900&q=80",
   },
   {
     name: "TitanWork 15",
@@ -142,9 +198,7 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.7,
     reviewCount: 29,
     attributes: { ram: 32, storage: 2048, display: "15.6-inch", batteryHours: 9 },
-    imageUrl: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=900&q=80",
   },
-  // Smartphones
   {
     name: "PulsePhone 12",
     description: "Premium smartphone with bright OLED display, fast charging, and excellent low-light camera.",
@@ -156,7 +210,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.6,
     reviewCount: 210,
     attributes: { storage: 256, cameraMp: 50, batteryMah: 4800 },
-    imageUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&q=80",
   },
   {
     name: "PulsePhone SE",
@@ -168,7 +221,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.3,
     reviewCount: 142,
     attributes: { storage: 128, cameraMp: 48, batteryMah: 5000 },
-    imageUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&q=80",
   },
   {
     name: "FramePhone Max",
@@ -181,7 +233,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.5,
     reviewCount: 88,
     attributes: { storage: 512, cameraMp: 64, batteryMah: 5200 },
-    imageUrl: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=900&q=80",
   },
   {
     name: "FramePhone Ultra",
@@ -193,7 +244,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.8,
     reviewCount: 74,
     attributes: { storage: 512, cameraMp: 72, batteryMah: 5000 },
-    imageUrl: "https://images.unsplash.com/photo-1611472173362-3f53dbd65e80?w=900&q=80",
   },
   {
     name: "Orbit X5",
@@ -205,7 +255,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.4,
     reviewCount: 96,
     attributes: { storage: 256, cameraMp: 50, batteryMah: 4500 },
-    imageUrl: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=900&q=80",
   },
   {
     name: "ZenMobile Neo",
@@ -217,7 +266,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.3,
     reviewCount: 121,
     attributes: { storage: 128, cameraMp: 48, batteryMah: 5100 },
-    imageUrl: "https://images.unsplash.com/photo-1574944985070-8f3ebc2b79d2?w=900&q=80",
   },
   {
     name: "Spark 5G Plus",
@@ -229,7 +277,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.4,
     reviewCount: 83,
     attributes: { storage: 256, cameraMp: 50, batteryMah: 4700 },
-    imageUrl: "https://images.unsplash.com/photo-1601784551445-20c9e07cdbdb?w=900&q=80",
   },
   {
     name: "PulsePhone Mini",
@@ -241,9 +288,7 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.5,
     reviewCount: 52,
     attributes: { storage: 256, cameraMp: 48, batteryMah: 4200 },
-    imageUrl: "https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=900&q=80",
   },
-  // Audio
   {
     name: "SoundWave ANC Headphones",
     description: "Over-ear noise cancelling headphones with 30-hour battery and studio-grade clarity.",
@@ -255,7 +300,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.7,
     reviewCount: 311,
     attributes: { wireless: true, anc: true, batteryHours: 30 },
-    imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=80",
   },
   {
     name: "SoundWave Buds Pro",
@@ -267,7 +311,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.4,
     reviewCount: 189,
     attributes: { wireless: true, anc: true, batteryHours: 8 },
-    imageUrl: "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=900&q=80",
   },
   {
     name: "SoundWave Studio",
@@ -280,7 +323,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.6,
     reviewCount: 98,
     attributes: { wireless: false, anc: false, driverMm: 50 },
-    imageUrl: "https://images.unsplash.com/photo-1487185078511-3bf0492b4261?w=900&q=80",
   },
   {
     name: "BassBox Portable Speaker",
@@ -292,7 +334,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.3,
     reviewCount: 144,
     attributes: { wireless: true, waterproof: "IPX7", batteryHours: 18 },
-    imageUrl: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=900&q=80",
   },
   {
     name: "ClipMic Wireless",
@@ -304,7 +345,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.5,
     reviewCount: 61,
     attributes: { wireless: true, rangeMeters: 200, batteryHours: 7 },
-    imageUrl: "https://images.unsplash.com/photo-1598488035139-bdbb2231bb04?w=900&q=80",
   },
   {
     name: "EchoDesk Speakers",
@@ -316,7 +356,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.4,
     reviewCount: 47,
     attributes: { wireless: true, stereo: true, powerWatts: 40 },
-    imageUrl: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=900&q=80",
   },
   {
     name: "Vinyl Air Max",
@@ -328,7 +367,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.7,
     reviewCount: 33,
     attributes: { wireless: true, anc: false, batteryHours: 22 },
-    imageUrl: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=900&q=80",
   },
   {
     name: "StageMon In-Ear",
@@ -340,9 +378,7 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.2,
     reviewCount: 58,
     attributes: { wireless: false, driverType: "balanced armature" },
-    imageUrl: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=900&q=80",
   },
-  // Accessories
   {
     name: "KeyFlow Mechanical Keyboard",
     description: "Hot-swappable mechanical keyboard with RGB and compact layout for developers.",
@@ -353,7 +389,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.5,
     reviewCount: 97,
     attributes: { switches: "linear", layout: "75%", wireless: true },
-    imageUrl: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=900&q=80",
   },
   {
     name: "GlideTrack Precision Mouse",
@@ -365,7 +400,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.2,
     reviewCount: 63,
     attributes: { dpi: 3200, wireless: true },
-    imageUrl: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=900&q=80",
   },
   {
     name: "DockPro USB-C Hub",
@@ -378,7 +412,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.6,
     reviewCount: 74,
     attributes: { ports: 11, displaySupport: "dual 4K" },
-    imageUrl: "https://images.unsplash.com/photo-1583394838334-acd97736f268?w=900&q=80",
   },
   {
     name: "ErgoStand Laptop Stand",
@@ -390,7 +423,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.4,
     reviewCount: 102,
     attributes: { material: "aluminum", maxDisplayInches: 17 },
-    imageUrl: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=900&q=80",
   },
   {
     name: "ThunderLink Cable Kit",
@@ -402,7 +434,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.3,
     reviewCount: 88,
     attributes: { cables: 3, maxWatts: 100 },
-    imageUrl: "https://images.unsplash.com/photo-1583394838334-acd97736f268?w=900&q=80",
   },
   {
     name: "WebCam Pro 4K",
@@ -415,7 +446,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.5,
     reviewCount: 71,
     attributes: { resolution: "4K", fps: 30, hdr: true },
-    imageUrl: "https://images.unsplash.com/photo-1587826080695-f9f9ae1d7de9?w=900&q=80",
   },
   {
     name: "PadFlow XL Mousepad",
@@ -427,7 +457,6 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.1,
     reviewCount: 156,
     attributes: { size: "900x400mm", surface: "speed" },
-    imageUrl: "https://images.unsplash.com/photo-1615663245857-ac9a64a63abb?w=900&q=80",
   },
   {
     name: "ChargeStack GaN 100W",
@@ -439,6 +468,5 @@ export const seedProducts: SeedProduct[] = [
     rating: 4.6,
     reviewCount: 92,
     attributes: { maxWatts: 100, ports: 3, gan: true },
-    imageUrl: "https://images.unsplash.com/photo-1583394838334-acd97736f268?w=900&q=80",
   },
 ];

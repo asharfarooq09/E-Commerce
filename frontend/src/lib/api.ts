@@ -25,6 +25,8 @@ export async function api<T>(path: string, options: ApiOptions = {}): Promise<T>
 
   if (options.json !== undefined) {
     headers.set("Content-Type", "application/json");
+  } else if (typeof options.body === "string" && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
   }
 
   const response = await fetch(`${getApiBaseUrl()}${path}`, {

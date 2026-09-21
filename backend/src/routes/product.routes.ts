@@ -82,22 +82,21 @@ router.get("/", async (req, res, next) => {
 
     const skip = (query.page - 1) * query.limit;
 
-    const [products, total, brands] = await Promise.all([
-      prisma.product.findMany({
-        where,
-        include: productListInclude,
-        orderBy: buildOrderBy(query.sort),
-        skip,
-        take: query.limit,
-      }),
-      prisma.product.count({ where }),
-      prisma.product.findMany({
-        where: query.category ? { category: { slug: query.category } } : undefined,
-        distinct: ["brand"],
-        select: { brand: true },
-        orderBy: { brand: "asc" },
-      }),
-    ]);
+    // Sequential queries avoid exhausting Prisma Local's fragile connection pool.
+    const products = await prisma.product.findMany({
+      where,
+      include: productListInclude,
+      orderBy: buildOrderBy(query.sort),
+      skip,
+      take: query.limit,
+    });
+    const total = await prisma.product.count({ where });
+    const brands = await prisma.product.findMany({
+      where: query.category ? { category: { slug: query.category } } : undefined,
+      distinct: ["brand"],
+      select: { brand: true },
+      orderBy: { brand: "asc" },
+    });
 
     res.json({
       products,
@@ -105,7 +104,7 @@ router.get("/", async (req, res, next) => {
         page: query.page,
         limit: query.limit,
         total,
-        totalPages: Math.ceil(total / query.limit),
+        totalPages: Math.ceil(total / query.limit) || 1,
       },
       filters: {
         brands: brands.map((b) => b.brand).filter(Boolean),

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="675" viewBox="0 0 900 675" role="img" aria-label="FramePhone Ultra">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#164e63"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="675" fill="url(#g)"/>
+  <circle cx="720" cy="120" r="160" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="140" cy="560" r="200" fill="rgba(0,0,0,0.12)"/>
+  <rect x="64" y="420" width="772" height="2" fill="rgba(255,255,255,0.25)"/>
+  <text x="64" y="480" fill="#fff" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700">FramePhone Ultra</text>
+  <text x="64" y="530" fill="rgba(255,255,255,0.85)" font-family="Segoe UI, Arial, sans-serif" font-size="24">Frame · Smartphones</text>
+  <text x="64" y="620" fill="rgba(255,255,255,0.55)" font-family="Segoe UI, Arial, sans-serif" font-size="18">ShopAI</text>
+</svg>

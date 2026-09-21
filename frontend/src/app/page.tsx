@@ -9,7 +9,7 @@ import type { HomeCatalog } from "@/types/shop";
 export const dynamic = "force-dynamic";
 
 async function getHomeCatalog() {
-  return serverApi<HomeCatalog>("/api/catalog/home", { next: { revalidate: 60 } });
+  return serverApi<HomeCatalog>("/api/catalog/home", { cache: "no-store" });
 }
 
 export default async function HomePage() {

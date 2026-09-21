@@ -6,6 +6,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { env } from "./config/env";
 import { errorHandler } from "./middleware/error-handler";
+import aiRoutes from "./routes/ai.routes";
 import adminRoutes from "./routes/admin.routes";
 import authRoutes from "./routes/auth.routes";
 import cartRoutes from "./routes/cart.routes";
@@ -46,6 +47,7 @@ export function createApp() {
   app.use("/api/categories", categoryRoutes);
   app.use("/api/catalog", catalogRoutes);
   app.use("/api/products", productRoutes);
+  app.use("/api/ai", aiRoutes);
   app.use("/api/cart", cartRoutes);
   app.use("/api/wishlist", wishlistRoutes);
   app.use("/api/orders", orderRoutes);

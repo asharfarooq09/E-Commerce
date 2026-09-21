@@ -1,7 +1,12 @@
 import "dotenv/config";
 import bcrypt from "bcryptjs";
 import { Role } from "../src/generated/prisma/client";
-import { seedCategories, seedProducts } from "./seed-data";
+import {
+  categoryCatalogImage,
+  productCatalogImage,
+  seedCategories,
+  seedProducts,
+} from "./seed-data";
 import { prisma } from "../src/lib/prisma";
 import { slugify } from "../src/utils/slug";
 
@@ -13,6 +18,13 @@ async function main() {
   await prisma.cart.deleteMany();
   await prisma.wishlistItem.deleteMany();
   await prisma.inventory.deleteMany();
+  // AI index tables reference Product via raw SQL FKs — clear before product delete.
+  await prisma.$executeRawUnsafe(`DELETE FROM product_semantic_index`);
+  try {
+    await prisma.$executeRawUnsafe(`DELETE FROM product_embeddings`);
+  } catch {
+    // pgvector table may not exist locally
+  }
   await prisma.productImage.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
@@ -48,20 +60,25 @@ async function main() {
         name: category.name,
         slug: slugify(category.name),
         description: category.description,
-        imageUrl: category.imageUrl,
+        imageUrl: categoryCatalogImage(category.name),
       },
     });
     categoryMap.set(category.name, created.id);
   }
 
+  const categoryIndex = new Map<string, number>();
   for (const item of seedProducts) {
     const categoryId = categoryMap.get(item.category);
     if (!categoryId) continue;
 
+    const index = categoryIndex.get(item.category) ?? 0;
+    categoryIndex.set(item.category, index + 1);
+
+    const slug = slugify(item.name);
     await prisma.product.create({
       data: {
         name: item.name,
-        slug: slugify(item.name),
+        slug,
         description: item.description,
         price: item.price,
         brand: item.brand,
@@ -72,7 +89,7 @@ async function main() {
         attributes: item.attributes,
         images: {
           create: {
-            url: item.imageUrl,
+            url: productCatalogImage(item.category, index),
             alt: item.name,
             isPrimary: true,
             sortOrder: 0,

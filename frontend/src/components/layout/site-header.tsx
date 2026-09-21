@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, Menu, Search, ShoppingCart, User } from "lucide-react";
+import { Heart, Menu, Search, ShoppingCart, Sparkles, User } from "lucide-react";
 import { useState } from "react";
 import { NavIconLink } from "@/components/layout/nav-icon-link";
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,13 @@ export function SiteHeader() {
             />
           </div>
         </form>
+
+        <Button variant="ghost" size="sm" asChild className="hidden lg:inline-flex">
+          <Link href="/ai-search" className="gap-1.5">
+            <Sparkles className="h-4 w-4 text-primary" />
+            AI Search
+          </Link>
+        </Button>
 
         <div className="ml-auto flex items-center gap-1 sm:gap-2">
           {!loading && user ? (
@@ -92,6 +99,9 @@ export function SiteHeader() {
           <nav className="flex flex-col gap-3">
             <Link href="/products" className="text-sm font-medium">
               Shop
+            </Link>
+            <Link href="/ai-search" className="text-sm font-medium">
+              AI Search
             </Link>
             <Link href="/wishlist" className="text-sm font-medium">
               Wishlist {wishlistCount > 0 ? `(${wishlistCount})` : ""}

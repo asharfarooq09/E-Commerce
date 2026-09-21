@@ -50,7 +50,7 @@ export function HomeHero() {
         <div className="relative">
           <div className="relative aspect-[5/4] overflow-hidden rounded-3xl border border-border bg-white shadow-xl shadow-indigo-100/50">
             <Image
-              src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=80"
+              src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80"
               alt="ShopAI storefront preview"
               fill
               className="object-cover"
